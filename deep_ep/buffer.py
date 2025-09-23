@@ -102,6 +102,10 @@ class Buffer:
             # Make sure QP depth is always larger than the number of on-flight WRs, so that we can skip WQ slot check
             os.environ['NVSHMEM_QP_DEPTH'] = os.environ.get('NVSHMEM_QP_DEPTH', '1024')
 
+            # On GCP, prefer the local NIC
+            os.environ['NVSHMEM_ENABLE_NIC_PE_MAPPING'] = '1'
+            os.environ['NVSHMEM_HCA_LIST'] = f'mlx5_{os.environ["LOCAL_RANK"]}:1'
+
             # Reduce gpu memory usage
             # 6 default teams + 1 extra team
             os.environ['NVSHMEM_MAX_TEAMS'] = '7'
